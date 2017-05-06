@@ -1,0 +1,23 @@
+// Sample basic carbon program
+
+struct person {
+	int age
+	float32 weight
+	char gender
+}
+
+enum colors {
+	RED = 1
+	GREEN = 10
+	BLUE
+}
+
+// func main() -> int {
+	int students
+	int64 count
+	int64 arr[100]
+	for count = 0; count < 100; count++ {
+		// do something
+	}
+	return 0
+}

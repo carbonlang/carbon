@@ -16,8 +16,9 @@ FIRST_ALPHA	[a-zA-Z_]
 %{
 
 #include "carbon.tab.h"
+extern FILE *yyin;
 void comment(void);
-#define DEBUG(s) printf(s "\n");
+#define DEBUG(s) printf("LEXER: " s "\n");
 
 %}
 
@@ -29,11 +30,11 @@ void comment(void);
 asm		{ DEBUG("ASM"); }
 assert		{ DEBUG("ASSERT"); }
 auto		{ DEBUG("AUTO"); }
-bool		{ DEBUG("BOOL"); }
+bool		{ DEBUG("BOOL"); return BOOL; }
 break		{ DEBUG("BREAK"); }
 case		{ DEBUG("CASE"); }
-char		{ DEBUG("CHAR"); }
-const		{ DEBUG("CONST"); }
+char		{ DEBUG("CHAR"); return CHAR; }
+const		{ DEBUG("CONST"); return CONST; }
 const_ptr	{ DEBUG("CONST_PTR"); }
 continue	{ DEBUG("CONTINUE"); }
 default		{ DEBUG("DEFAULT"); }
@@ -41,10 +42,10 @@ defer		{ DEBUG("DEFER"); }
 delete		{ DEBUG("DELETE"); }
 do		{ DEBUG("DO"); }
 else		{ DEBUG("ELSE"); }
-enum		{ DEBUG("ENUM"); }
-float32		{ DEBUG("FLOAT32"); }
-float64		{ DEBUG("FLOAT64"); }
-float128	{ DEBUG("FLOAT128"); }
+enum		{ DEBUG("ENUM"); return ENUM; }
+float32		{ DEBUG("FLOAT32"); return FLOAT32; }
+float64		{ DEBUG("FLOAT64"); return FLOAT64; }
+float128	{ DEBUG("FLOAT128"); return FLOAT128; }
 for		{ DEBUG("FOR"); }
 foreach		{ DEBUG("FOREACH"); }
 func		{ DEBUG("FUNC"); }
@@ -52,11 +53,11 @@ goto		{ DEBUG("GOTO"); }
 if		{ DEBUG("IF"); }
 in		{ DEBUG("IN"); }
 include		{ DEBUG("INCLUDE"); }
-int		{ DEBUG("INT"); }
-int8		{ DEBUG("INT8"); }
-int16		{ DEBUG("INT16"); }
-int32		{ DEBUG("INT32"); }
-int64		{ DEBUG("INT64"); }
+int		{ DEBUG("INT"); return INT; }
+int8		{ DEBUG("INT8"); return INT8; }
+int16		{ DEBUG("INT16"); return INT16; }
+int32		{ DEBUG("INT32"); return INT32; }
+int64		{ DEBUG("INT64"); return INT64; }
 len		{ DEBUG("LEN"); }
 module		{ DEBUG("MODULE"); }
 new		{ DEBUG("NEW"); }
@@ -66,22 +67,24 @@ return		{ DEBUG("RETURN"); }
 sizeof		{ DEBUG("SIZEOF"); }
 static		{ DEBUG("STATIC"); }
 static_assert	{ DEBUG("STATIC_ASSERT"); }
-struct		{ DEBUG("STRUCT"); }
+struct		{ DEBUG("STRUCT"); return STRUCT; }
 switch		{ DEBUG("SWITCH"); }
 type		{ DEBUG("TYPE"); }
-uint		{ DEBUG("UINT"); }
-uint8		{ DEBUG("UINT8"); }
-uint16		{ DEBUG("UINT16"); }
-uint32		{ DEBUG("UINT32"); }
-uint64		{ DEBUG("UINT64"); }
+volatile	{ DEBUG("VOLATILE"); return VOLATILE; }
+uint		{ DEBUG("UINT"); return UINT; }
+uint8		{ DEBUG("UINT8"); return UINT8; }
+uint16		{ DEBUG("UINT16"); return UINT16; }
+uint32		{ DEBUG("UINT32"); return UINT32; }
+uint64		{ DEBUG("UINT64"); return UINT64; }
+union		{ DEBUG("UNION"); return UNION; }
 use		{ DEBUG("USE"); }
 while		{ DEBUG("WHILE"); }
 
-[a-zA-Z_][a-zA-Z_0-9]*		{ DEBUG("IDENTIFIER"); }
+[a-zA-Z_][a-zA-Z_0-9]*		{ DEBUG("IDENTIFIER"); return IDENTIFIER; }
 
 {BINARY_PREFIX}{BINARY}+	{ DEBUG("BINARY CONSTANT"); }
 {OCTAL_PREFIX}{OCTAL}+		{ DEBUG("OCTAL CONSTANT"); }
-{DECIMAL_PREFIX}?{DECIMAL}+	{ DEBUG("DECIMAL CONSTANT"); }
+{DECIMAL_PREFIX}?{DECIMAL}+	{ DEBUG("DECIMAL CONSTANT"); return DECIMAL_CONST; }
 {HEX_PREFIX}{HEX}+		{ DEBUG("HEX CONSTANT"); }
 
 {DECIMAL}+{E_EXP}			{ DEBUG("CLASS A FLOAT CONSTANT"); }
@@ -115,6 +118,7 @@ while		{ DEBUG("WHILE"); }
 "<<="		{ DEBUG("RS_ASSIGN_OP"); }
 "->"		{ DEBUG("MINUS_GR_OP"); }
 
+"="		{ DEBUG("="); return '='; }
 "+"		{ DEBUG("+"); }
 "-"		{ DEBUG("-"); }
 "*"		{ DEBUG("*"); }
@@ -129,10 +133,10 @@ while		{ DEBUG("WHILE"); }
 "?"		{ DEBUG("?"); }
 "("		{ DEBUG(")"); }
 ")"		{ DEBUG("("); }
-"["		{ DEBUG("["); }
-"]"		{ DEBUG("]"); }
-"{"		{ DEBUG("{"); }
-"}"		{ DEBUG("}"); }
+"["		{ DEBUG("["); return '['; }
+"]"		{ DEBUG("]"); return ']'; }
+"{"		{ DEBUG("{"); return '{'; }
+"}"		{ DEBUG("}"); return '}'; }
 ","		{ DEBUG(","); }
 ";"		{ DEBUG(";"); }
 ":"		{ DEBUG(":"); }
