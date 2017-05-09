@@ -80,6 +80,8 @@ union		{ DEBUG("UNION"); return UNION; }
 use		{ DEBUG("USE"); }
 while		{ DEBUG("WHILE"); }
 
+"_"		{ DEBUG("_"); return '_'; }
+
 [a-zA-Z_][a-zA-Z_0-9]*		{ DEBUG("IDENTIFIER"); return IDENTIFIER; }
 
 {BINARY_PREFIX}{BINARY}+	{ DEBUG("BINARY CONSTANT"); }

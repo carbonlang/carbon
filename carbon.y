@@ -24,14 +24,14 @@ program
 	;
 
 declaration_specifier
-	: basictype_specifier IDENTIFIER '[' DECIMAL_CONST ']'	{ DEBUG("ARRAY DECLARATION FOUND!"); }
-	| basictype_specifier IDENTIFIER			{ DEBUG("BASIC DECLARATION FOUND!"); }
-	| STRUCT IDENTIFIER '{' struct_declaration_list '}'	{ DEBUG("STRUCT DECLARATION FOUND!"); }
-	| UNION IDENTIFIER '{' union_declaration_list '}'	{ DEBUG("UNION DECLARATION FOUND!"); }
-	| ENUM IDENTIFIER '{' enumerator_list '}'		{ DEBUG("ENUM DECLARATION FOUND!"); }
+	: basic_type_specifier IDENTIFIER			{ DEBUG("BASIC DECLARATION FOUND"); }
+	| compound_type_specifier				{ DEBUG("COMPOUND DECLARATION FOUND"); }
+	| compound_type_specifier IDENTIFIER			{ DEBUG("COMPOUND DECLARATION WITH IDENT FOUND"); }
+	| basic_type_specifier IDENTIFIER '[' DECIMAL_CONST ']'			{ DEBUG("BASIC ARRAY DECLARATION FOUND"); }
+	| compound_type_specifier IDENTIFIER '[' DECIMAL_CONST ']'		{ DEBUG("COMPOUND ARRAY DECLARATION FOUND"); }
 	;
 
-basictype_specifier
+basic_type_specifier
 	: CHAR
 	| BOOL
 	| INT
@@ -49,21 +49,42 @@ basictype_specifier
 	| FLOAT128
 	;
 
+compound_type_specifier
+	: struct_specifier		{ DEBUG("STRUCT FOUND"); }
+	| union_specifier		{ DEBUG("UNION FOUND"); }
+	| enum_specifier		{ DEBUG("ENUM FOUND"); }
+	;
+
+struct_specifier
+	: STRUCT IDENTIFIER '{' struct_declaration_list '}'
+	| STRUCT '_' '{' struct_declaration_list '}'
+	;
+
 struct_declaration_list
 	: declaration_specifier					{ DEBUG("STRUCT ELEMENT"); }
-	| declaration_specifier struct_declaration_list
+	| declaration_specifier struct_declaration_list		{ DEBUG("STRUCT ELEMENT"); }
+	;
+
+union_specifier
+	: UNION IDENTIFIER '{' union_declaration_list '}'
+	| UNION '_' '{' union_declaration_list '}'
 	;
 
 union_declaration_list
 	: declaration_specifier					{ DEBUG("UNION ELEMENT"); }
-	| declaration_specifier union_declaration_list
+	| declaration_specifier union_declaration_list		{ DEBUG("UNION ELEMENT"); }
 	;
 
-enumerator_list
-	: IDENTIFIER						{ DEBUG("UNION ELEMENT"); }
-	| IDENTIFIER '=' DECIMAL_CONST				{ DEBUG("UNION ELEMENT = VALUE"); }
-	| IDENTIFIER enumerator_list
-	| IDENTIFIER '=' DECIMAL_CONST enumerator_list
+enum_specifier
+	: ENUM IDENTIFIER '{' enum_declaration_list '}'
+	| ENUM '_' '{' enum_declaration_list '}'
+	;
+
+enum_declaration_list
+	: IDENTIFIER						{ DEBUG("ENUM ELEMENT"); }
+	| IDENTIFIER '=' DECIMAL_CONST				{ DEBUG("ENUM ELEMENT = VALUE"); }
+	| IDENTIFIER enum_declaration_list			{ DEBUG("ENUM ELEMENT"); }
+	| IDENTIFIER '=' DECIMAL_CONST enum_declaration_list	{ DEBUG("ENUM ELEMENT = VALUE"); }
 	;
 
 %%

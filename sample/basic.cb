@@ -12,6 +12,11 @@ enum colors {
 	BLUE
 }
 
+union _ {
+	int y
+	float32 z
+} coord[100]
+
 // func main() -> int {
 	int students
 	int64 count
