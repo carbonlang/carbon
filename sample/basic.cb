@@ -3,7 +3,7 @@
 struct person {
 	int age
 	float32 weight
-	char gender
+	char ptr ptr gender
 }
 
 enum colors {
@@ -13,7 +13,7 @@ enum colors {
 }
 
 union _ {
-	int y
+	int const_ptr y
 	float32 z
 } coord[100]
 
@@ -21,6 +21,9 @@ union _ {
 	int students
 	int64 count
 	int64 arr[100]
+	static char c
+	static const bool b
+	struct person pra
 	for count = 0; count < 100; count++ {
 		// do something
 	}

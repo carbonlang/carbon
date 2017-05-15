@@ -35,7 +35,7 @@ break		{ DEBUG("BREAK"); }
 case		{ DEBUG("CASE"); }
 char		{ DEBUG("CHAR"); return CHAR; }
 const		{ DEBUG("CONST"); return CONST; }
-const_ptr	{ DEBUG("CONST_PTR"); }
+const_ptr	{ DEBUG("CONST_PTR"); return CONST_PTR; }
 continue	{ DEBUG("CONTINUE"); }
 default		{ DEBUG("DEFAULT"); }
 defer		{ DEBUG("DEFER"); }
@@ -61,11 +61,11 @@ int64		{ DEBUG("INT64"); return INT64; }
 len		{ DEBUG("LEN"); }
 module		{ DEBUG("MODULE"); }
 new		{ DEBUG("NEW"); }
-ptr		{ DEBUG("PTR"); }
+ptr		{ DEBUG("PTR"); return PTR; }
 ref		{ DEBUG("REF"); }
 return		{ DEBUG("RETURN"); }
 sizeof		{ DEBUG("SIZEOF"); }
-static		{ DEBUG("STATIC"); }
+static		{ DEBUG("STATIC"); return STATIC; }
 static_assert	{ DEBUG("STATIC_ASSERT"); }
 struct		{ DEBUG("STRUCT"); return STRUCT; }
 switch		{ DEBUG("SWITCH"); }

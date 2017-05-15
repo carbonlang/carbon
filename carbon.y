@@ -11,6 +11,9 @@
 %token STRUCT UNION ENUM
 
 %token CONST VOLATILE
+%token STATIC
+
+%token PTR CONST_PTR
 
 %token DECIMAL_CONST
 
@@ -19,16 +22,41 @@
 %%
 
 program
-	: declaration_specifier program
-	| declaration_specifier
+	: statements program
+	| statements
 	;
 
-declaration_specifier
-	: basic_type_specifier IDENTIFIER			{ DEBUG("BASIC DECLARATION FOUND"); }
-	| compound_type_specifier				{ DEBUG("COMPOUND DECLARATION FOUND"); }
-	| compound_type_specifier IDENTIFIER			{ DEBUG("COMPOUND DECLARATION WITH IDENT FOUND"); }
-	| basic_type_specifier IDENTIFIER '[' DECIMAL_CONST ']'			{ DEBUG("BASIC ARRAY DECLARATION FOUND"); }
-	| compound_type_specifier IDENTIFIER '[' DECIMAL_CONST ']'		{ DEBUG("COMPOUND ARRAY DECLARATION FOUND"); }
+statements
+	: declare_or_define
+	;
+
+declare_or_define
+	: single_type_definition
+	| array_type_definition
+	| compound_type_declaration
+	;
+
+array_type_definition
+	: single_type_definition '[' DECIMAL_CONST ']'		{ DEBUG("ARRAY"); }
+	;
+
+single_type_definition
+	: basic_type_specifier IDENTIFIER			{ DEBUG("BASIC TYPE DEF"); }
+	| compound_type_specifier IDENTIFIER			{ DEBUG("COMPOUND TYPE DEF"); }
+	| type_prefix basic_type_specifier IDENTIFIER			{ DEBUG("BASIC TYPE DEF + TYPE PREFIX"); }
+	| type_prefix compound_type_specifier IDENTIFIER		{ DEBUG("COMPOUND TYPE DEF + PREFIX"); }
+	/* Pointers definition */
+	| basic_type_specifier pointer IDENTIFIER			{ DEBUG("BASIC POINTER TYPE DEF"); }
+	| compound_type_specifier pointer IDENTIFIER			{ DEBUG("COMPOUND POINTER TYPE DEF"); }
+	| type_prefix basic_type_specifier pointer IDENTIFIER			{ DEBUG("BASIC POINTER TYPE DEF + TYPE PREFIX"); }
+	| type_prefix compound_type_specifier pointer IDENTIFIER		{ DEBUG("COMPOUND POINTER TYPE DEF + PREFIX"); }
+	;
+
+compound_type_declaration
+	: compound_type_specifier				{ DEBUG("COMPOUND TYPE DEC"); }
+	| STRUCT IDENTIFIER					{ DEBUG("STRUCT VAR"); }
+	| UNION IDENTIFIER					{ DEBUG("UNION VAR"); }
+	| ENUM IDENTIFIER					{ DEBUG("ENUM VAR"); }
 	;
 
 basic_type_specifier
@@ -61,8 +89,8 @@ struct_specifier
 	;
 
 struct_declaration_list
-	: declaration_specifier					{ DEBUG("STRUCT ELEMENT"); }
-	| declaration_specifier struct_declaration_list		{ DEBUG("STRUCT ELEMENT"); }
+	: declare_or_define					{ DEBUG("STRUCT ELEMENT"); }
+	| declare_or_define struct_declaration_list		{ DEBUG("STRUCT ELEMENT"); }
 	;
 
 union_specifier
@@ -71,8 +99,8 @@ union_specifier
 	;
 
 union_declaration_list
-	: declaration_specifier					{ DEBUG("UNION ELEMENT"); }
-	| declaration_specifier union_declaration_list		{ DEBUG("UNION ELEMENT"); }
+	: declare_or_define					{ DEBUG("UNION ELEMENT"); }
+	| declare_or_define union_declaration_list		{ DEBUG("UNION ELEMENT"); }
 	;
 
 enum_specifier
@@ -85,6 +113,29 @@ enum_declaration_list
 	| IDENTIFIER '=' DECIMAL_CONST				{ DEBUG("ENUM ELEMENT = VALUE"); }
 	| IDENTIFIER enum_declaration_list			{ DEBUG("ENUM ELEMENT"); }
 	| IDENTIFIER '=' DECIMAL_CONST enum_declaration_list	{ DEBUG("ENUM ELEMENT = VALUE"); }
+	;
+
+type_prefix
+	: storage_class
+	| type_qualifier
+	| storage_class type_qualifier
+	;
+
+storage_class
+	: STATIC				{ DEBUG("STATIC"); }
+	;
+
+type_qualifier
+	: CONST					{ DEBUG("CONST"); }
+	| VOLATILE				{ DEBUG("VOLATILE"); }
+	| CONST VOLATILE			{ DEBUG("CONST VOLATILE"); }
+	;
+
+pointer
+	: PTR pointer
+	| CONST_PTR pointer
+	| PTR
+	| CONST_PTR
 	;
 
 %%
