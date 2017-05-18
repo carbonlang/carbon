@@ -1,0 +1,14 @@
+// Sample initialization carbon program
+
+// func main() -> int {
+	int students = 200
+	int64 count = 25000
+	int64 arr[100] = {10, 20, 30}
+	static char c = 'C'
+	char n = '\n'
+	char a = '\a'
+	bool b = false
+	string s = "This is a string"
+	string c = s
+	return 0
+//}

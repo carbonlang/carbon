@@ -43,6 +43,7 @@ delete		{ DEBUG("DELETE"); }
 do		{ DEBUG("DO"); }
 else		{ DEBUG("ELSE"); }
 enum		{ DEBUG("ENUM"); return ENUM; }
+false		{ DEBUG("FALSE"); return FALSE; }
 float32		{ DEBUG("FLOAT32"); return FLOAT32; }
 float64		{ DEBUG("FLOAT64"); return FLOAT64; }
 float128	{ DEBUG("FLOAT128"); return FLOAT128; }
@@ -67,8 +68,10 @@ return		{ DEBUG("RETURN"); }
 sizeof		{ DEBUG("SIZEOF"); }
 static		{ DEBUG("STATIC"); return STATIC; }
 static_assert	{ DEBUG("STATIC_ASSERT"); }
+string		{ DEBUG("STRING"); return STRING; }
 struct		{ DEBUG("STRUCT"); return STRUCT; }
 switch		{ DEBUG("SWITCH"); }
+true		{ DEBUG("TRUE"); return TRUE; }
 type		{ DEBUG("TYPE"); }
 volatile	{ DEBUG("VOLATILE"); return VOLATILE; }
 uint		{ DEBUG("UINT"); return UINT; }
@@ -84,17 +87,17 @@ while		{ DEBUG("WHILE"); }
 
 [a-zA-Z_][a-zA-Z_0-9]*		{ DEBUG("IDENTIFIER"); return IDENTIFIER; }
 
-{BINARY_PREFIX}{BINARY}+	{ DEBUG("BINARY CONSTANT"); }
-{OCTAL_PREFIX}{OCTAL}+		{ DEBUG("OCTAL CONSTANT"); }
+{BINARY_PREFIX}{BINARY}+	{ DEBUG("BINARY CONSTANT"); return BINARY_CONST; }
+{OCTAL_PREFIX}{OCTAL}+		{ DEBUG("OCTAL CONSTANT"); return OCTAL_CONST; }
 {DECIMAL_PREFIX}?{DECIMAL}+	{ DEBUG("DECIMAL CONSTANT"); return DECIMAL_CONST; }
-{HEX_PREFIX}{HEX}+		{ DEBUG("HEX CONSTANT"); }
+{HEX_PREFIX}{HEX}+		{ DEBUG("HEX CONSTANT"); return HEX_CONST; }
 
-{DECIMAL}+{E_EXP}			{ DEBUG("CLASS A FLOAT CONSTANT"); }
-{DECIMAL}*"."{DECIMAL}+{E_EXP}?		{ DEBUG("CLASS B FLOAT CONSTANT"); }
-{DECIMAL}+"."{E_EXP}?			{ DEBUG("CLASS C FLOAT CONSTANT"); }
-{HEX_PREFIX}{HEX}+{P_EXP}		{ DEBUG("CLASS D FLOAT CONSTANT"); }
-{HEX_PREFIX}{HEX}*"."{HEX}+{P_EXP}	{ DEBUG("CLASS E FLOAT CONSTANT"); }
-{HEX_PREFIX}{HEX}+"."{P_EXP}		{ DEBUG("CLASS F FLOAT CONSTANT"); }
+{DECIMAL}+{E_EXP}			{ DEBUG("CLASS A FLOAT CONSTANT"); return FLOAT_CONST; }
+{DECIMAL}*"."{DECIMAL}+{E_EXP}?		{ DEBUG("CLASS B FLOAT CONSTANT"); return FLOAT_CONST; }
+{DECIMAL}+"."{E_EXP}?			{ DEBUG("CLASS C FLOAT CONSTANT"); return FLOAT_CONST; }
+{HEX_PREFIX}{HEX}+{P_EXP}		{ DEBUG("CLASS D FLOAT CONSTANT"); return FLOAT_CONST; }
+{HEX_PREFIX}{HEX}*"."{HEX}+{P_EXP}	{ DEBUG("CLASS E FLOAT CONSTANT"); return FLOAT_CONST; }
+{HEX_PREFIX}{HEX}+"."{P_EXP}		{ DEBUG("CLASS F FLOAT CONSTANT"); return FLOAT_CONST; }
 
 "&^"		{ DEBUG("AND_NOT_OP"); }
 "<<"		{ DEBUG("RS_OP"); }
@@ -139,12 +142,13 @@ while		{ DEBUG("WHILE"); }
 "]"		{ DEBUG("]"); return ']'; }
 "{"		{ DEBUG("{"); return '{'; }
 "}"		{ DEBUG("}"); return '}'; }
-","		{ DEBUG(","); }
+","		{ DEBUG(","); return ','; }
 ";"		{ DEBUG(";"); }
 ":"		{ DEBUG(":"); }
 "."		{ DEBUG("."); }
 
-\"(\\.|[^\\"\n])*\"	{ DEBUG("STRING LITERAL"); }
+\'(\\.|[^'])\'		{ DEBUG("CHARACTER LITERAL"); return CHAR_LITERAL; }
+\"(\\.|[^\\"\n])*\"	{ DEBUG("STRING LITERAL"); return STRING_LITERAL; }
 
 [ \n\t\v\f]		{ DEBUG("WS"); }
 

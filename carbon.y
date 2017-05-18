@@ -5,17 +5,21 @@
 
 /* Declare tokens */
 %token IDENTIFIER
-%token CHAR BOOL
+%token CHAR STRING
+%token BOOL
 %token INT UINT INT8 INT16 INT32 INT64 UINT8 UINT16 UINT32 UINT64
 %token FLOAT32 FLOAT64 FLOAT128
 %token STRUCT UNION ENUM
+
+%token TRUE FALSE
 
 %token CONST VOLATILE
 %token STATIC
 
 %token PTR CONST_PTR
 
-%token DECIMAL_CONST
+%token BINARY_CONST OCTAL_CONST DECIMAL_CONST HEX_CONST FLOAT_CONST
+%token CHAR_LITERAL STRING_LITERAL
 
 %error-verbose
 
@@ -28,12 +32,18 @@ program
 
 statements
 	: declare_or_define
+	| initialize
 	;
 
 declare_or_define
 	: single_type_definition
 	| array_type_definition
 	| compound_type_declaration
+	;
+
+initialize
+	: single_type_definition initializer
+	| array_type_definition initializer
 	;
 
 array_type_definition
@@ -52,15 +62,9 @@ single_type_definition
 	| type_prefix compound_type_specifier pointer IDENTIFIER		{ DEBUG("COMPOUND POINTER TYPE DEF + PREFIX"); }
 	;
 
-compound_type_declaration
-	: compound_type_specifier				{ DEBUG("COMPOUND TYPE DEC"); }
-	| STRUCT IDENTIFIER					{ DEBUG("STRUCT VAR"); }
-	| UNION IDENTIFIER					{ DEBUG("UNION VAR"); }
-	| ENUM IDENTIFIER					{ DEBUG("ENUM VAR"); }
-	;
-
 basic_type_specifier
 	: CHAR
+	| STRING
 	| BOOL
 	| INT
 	| UINT
@@ -83,9 +87,16 @@ compound_type_specifier
 	| enum_specifier		{ DEBUG("ENUM FOUND"); }
 	;
 
+compound_type_declaration
+	: STRUCT IDENTIFIER '{' struct_declaration_list '}'
+	| UNION IDENTIFIER '{' union_declaration_list '}'
+	| ENUM IDENTIFIER '{' enum_declaration_list '}'
+	;
+
 struct_specifier
 	: STRUCT IDENTIFIER '{' struct_declaration_list '}'
 	| STRUCT '_' '{' struct_declaration_list '}'
+	| STRUCT IDENTIFIER
 	;
 
 struct_declaration_list
@@ -96,6 +107,7 @@ struct_declaration_list
 union_specifier
 	: UNION IDENTIFIER '{' union_declaration_list '}'
 	| UNION '_' '{' union_declaration_list '}'
+	| UNION IDENTIFIER
 	;
 
 union_declaration_list
@@ -106,6 +118,7 @@ union_declaration_list
 enum_specifier
 	: ENUM IDENTIFIER '{' enum_declaration_list '}'
 	| ENUM '_' '{' enum_declaration_list '}'
+	| ENUM IDENTIFIER
 	;
 
 enum_declaration_list
@@ -136,6 +149,28 @@ pointer
 	| CONST_PTR pointer
 	| PTR
 	| CONST_PTR
+	;
+
+initializer
+	: '=' init_exp				{ DEBUG("INIT"); }
+	| '=' '{' init_list '}'			{ DEBUG("INIT LIST"); }
+	;
+
+init_list
+	: init_exp
+	| init_exp ',' init_list
+	;
+
+init_exp
+	: OCTAL_CONST
+	| DECIMAL_CONST
+	| HEX_CONST
+	| FLOAT_CONST
+	| CHAR_LITERAL
+	| STRING_LITERAL
+	| IDENTIFIER
+	| TRUE
+	| FALSE
 	;
 
 %%
