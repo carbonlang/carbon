@@ -21,6 +21,14 @@
 %token BINARY_CONST OCTAL_CONST DECIMAL_CONST HEX_CONST FLOAT_CONST
 %token CHAR_LITERAL STRING_LITERAL
 
+%token RS_OP LS_OP
+%token EQ_OP NE_OP LE_OP GE_OP
+%token AND_OP OR_OP AND_NOT_OP
+%token MUL_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP ADD_ASSIGN_OP SUB_ASSIGN_OP
+%token AND_ASSIGN_OP OR_ASSIGN_OP XOR_ASSIGN_OP AND_NOT_ASSIGN_OP LS_ASSIGN_OP RS_ASSIGN_OP
+
+%token INC_OP DEC_OP
+
 %error-verbose
 
 %%
@@ -33,6 +41,7 @@ program
 statements
 	: declare_or_define
 	| initialize
+	| expression
 	;
 
 declare_or_define
@@ -162,7 +171,8 @@ init_list
 	;
 
 init_exp
-	: OCTAL_CONST
+	: BINARY_CONST
+	| OCTAL_CONST
 	| DECIMAL_CONST
 	| HEX_CONST
 	| FLOAT_CONST
@@ -172,6 +182,116 @@ init_exp
 	| TRUE
 	| FALSE
 	;
+
+operand
+	: BINARY_CONST
+	| OCTAL_CONST
+	| DECIMAL_CONST
+	| HEX_CONST
+	| FLOAT_CONST
+	| CHAR_LITERAL
+	| STRING_LITERAL
+	| IDENTIFIER
+	| TRUE
+	| FALSE
+	;
+
+expression
+	: binary_expression
+	| unary_expression					{ DEBUG("UNARY EXP"); }
+	;
+
+unary_expression
+	: operand unary_operator_post
+	| unary_operator_pre operand
+	| unary_operator_pre '(' binary_expression ')'
+	| '(' binary_expression ')' unary_operator_post
+	| unary_operator_pre '(' unary_expression ')'
+	| '(' unary_expression ')' unary_operator_post
+	;
+
+binary_expression
+	: operand binary_operator binary_expression		{ DEBUG("MULT EXP"); }
+	| operand binary_operator operand			{ DEBUG("SINGLE EXP"); }
+	| '(' binary_expression ')'				{ DEBUG("(EXP)"); }
+	| '(' binary_expression ')' binary_operator operand			{ DEBUG("(EXP) OP OPRD"); }
+	| '(' binary_expression ')' binary_operator binary_expression		{ DEBUG("(EXP) OP EXP"); }
+	;
+
+unary_operator_pre
+	: '!'
+	| '+'
+	| '-'
+	| '~'
+
+unary_operator_post
+	: INC_OP
+	| DEC_OP
+	;
+
+binary_operator
+	: arithmatic_operator
+	| shift_operator
+	| relation_operator
+	| logical_operator
+	| bitwise_operator
+	;
+
+arithmatic_operator
+	: '*'
+	| '/'
+	| '%'
+	| '+'
+	| '-'
+	;
+
+shift_operator
+	: RS_OP
+	| LS_OP
+	;
+
+relation_operator
+	: '<'
+	| '>'
+	| EQ_OP
+	| NE_OP
+	| LE_OP
+	| GE_OP
+	;
+
+logical_operator
+	: AND_OP
+	| OR_OP
+	| '!'
+	;
+
+bitwise_operator
+	: '&'
+	| '|'
+	| '^'
+	| AND_NOT_OP
+	;
+
+/*
+ternary_operator
+	: operand '?' operand ':' operand
+	;
+
+assignment_operator
+	: '='
+	| MUL_ASSIGN_OP
+	| DIV_ASSIGN_OP
+	| MOD_ASSIGN_OP
+	| ADD_ASSIGN_OP
+	| SUB_ASSIGN_OP
+	| AND_ASSIGN_OP
+	| OR_ASSIGN_OP
+	| XOR_ASSIGN_OP
+	| AND_NOT_ASSIGN_OP
+	| LS_ASSIGN_OP
+	| RS_ASSIGN_OP
+	;
+*/
 
 %%
 

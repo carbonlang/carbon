@@ -99,60 +99,61 @@ while		{ DEBUG("WHILE"); }
 {HEX_PREFIX}{HEX}*"."{HEX}+{P_EXP}	{ DEBUG("CLASS E FLOAT CONSTANT"); return FLOAT_CONST; }
 {HEX_PREFIX}{HEX}+"."{P_EXP}		{ DEBUG("CLASS F FLOAT CONSTANT"); return FLOAT_CONST; }
 
-"&^"		{ DEBUG("AND_NOT_OP"); }
-"<<"		{ DEBUG("RS_OP"); }
-">>"		{ DEBUG("LS_OP"); }
-"=="		{ DEBUG("EQ_OP"); }
-"!="		{ DEBUG("NE_OP"); }
-"<="		{ DEBUG("LE_OP"); }
-">="		{ DEBUG("GE_OP"); }
-"&&"		{ DEBUG("AND_OP"); }
-"||"		{ DEBUG("OR_OP"); }
-"++"		{ DEBUG("INC_OP"); }
-"--"		{ DEBUG("DEC_OP"); }
-"+="		{ DEBUG("ADD_ASSIGN_OP"); }
-"-="		{ DEBUG("SUB_ASSIGN_OP"); }
-"*="		{ DEBUG("MUL_ASSIGN_OP"); }
-"/="		{ DEBUG("DIV_ASSIGN_OP"); }
-"%="		{ DEBUG("MOD_ASSIGN_OP"); }
-"&="		{ DEBUG("AND_ASSIGN_OP"); }
-"|="		{ DEBUG("OR_ASSIGN_OP"); }
-"^="		{ DEBUG("XOR_ASSIGN_OP"); }
-"&^="		{ DEBUG("AND_NOT_ASSIGN_OP"); }
-">>="		{ DEBUG("LS_ASSIGN_OP"); }
-"<<="		{ DEBUG("RS_ASSIGN_OP"); }
+"&^"		{ DEBUG("AND_NOT_OP"); return AND_NOT_OP; }
+"<<"		{ DEBUG("RS_OP"); return RS_OP; }
+">>"		{ DEBUG("LS_OP"); return LS_OP; }
+"=="		{ DEBUG("EQ_OP"); return EQ_OP; }
+"!="		{ DEBUG("NE_OP"); return NE_OP; }
+"<="		{ DEBUG("LE_OP"); return LE_OP; }
+">="		{ DEBUG("GE_OP"); return GE_OP; }
+"&&"		{ DEBUG("AND_OP"); return AND_OP; }
+"||"		{ DEBUG("OR_OP"); return OR_OP; }
+"++"		{ DEBUG("INC_OP"); return INC_OP; }
+"--"		{ DEBUG("DEC_OP"); return DEC_OP; }
+"+="		{ DEBUG("ADD_ASSIGN_OP"); return ADD_ASSIGN_OP; }
+"-="		{ DEBUG("SUB_ASSIGN_OP"); return SUB_ASSIGN_OP; }
+"*="		{ DEBUG("MUL_ASSIGN_OP"); return MUL_ASSIGN_OP; }
+"/="		{ DEBUG("DIV_ASSIGN_OP"); return DIV_ASSIGN_OP; }
+"%="		{ DEBUG("MOD_ASSIGN_OP"); return MOD_ASSIGN_OP; }
+"&="		{ DEBUG("AND_ASSIGN_OP"); return AND_ASSIGN_OP; }
+"|="		{ DEBUG("OR_ASSIGN_OP"); return OR_ASSIGN_OP; }
+"^="		{ DEBUG("XOR_ASSIGN_OP"); return XOR_ASSIGN_OP; }
+"&^="		{ DEBUG("AND_NOT_ASSIGN_OP"); return AND_NOT_ASSIGN_OP; }
+">>="		{ DEBUG("LS_ASSIGN_OP"); return LS_ASSIGN_OP; }
+"<<="		{ DEBUG("RS_ASSIGN_OP"); return RS_ASSIGN_OP; }
 "->"		{ DEBUG("MINUS_GR_OP"); }
 
 "="		{ DEBUG("="); return '='; }
-"+"		{ DEBUG("+"); }
-"-"		{ DEBUG("-"); }
-"*"		{ DEBUG("*"); }
-"/"		{ DEBUG("/"); }
-"%"		{ DEBUG("%%"); }
-"&"		{ DEBUG("&"); }
-"|"		{ DEBUG("|"); }
-"^"		{ DEBUG("^"); }
-"@"		{ DEBUG("@"); }
-"<"		{ DEBUG("<"); }
-">"		{ DEBUG(">"); }
-"?"		{ DEBUG("?"); }
-"("		{ DEBUG(")"); }
-")"		{ DEBUG("("); }
+"+"		{ DEBUG("+"); return '+'; }
+"-"		{ DEBUG("-"); return '-'; }
+"*"		{ DEBUG("*"); return '*'; }
+"/"		{ DEBUG("/"); return '/'; }
+"%"		{ DEBUG("%%"); return '%'; }
+"&"		{ DEBUG("&"); return '&'; }
+"|"		{ DEBUG("|"); return '|'; }
+"^"		{ DEBUG("^"); return '^'; }
+"@"		{ DEBUG("@"); return '@'; }
+"<"		{ DEBUG("<"); return '<'; }
+">"		{ DEBUG(">"); return '>'; }
+"?"		{ DEBUG("?"); return '?'; }
+"("		{ DEBUG("("); return '('; }
+")"		{ DEBUG(")"); return ')'; }
 "["		{ DEBUG("["); return '['; }
 "]"		{ DEBUG("]"); return ']'; }
 "{"		{ DEBUG("{"); return '{'; }
 "}"		{ DEBUG("}"); return '}'; }
 ","		{ DEBUG(","); return ','; }
-";"		{ DEBUG(";"); }
-":"		{ DEBUG(":"); }
-"."		{ DEBUG("."); }
+";"		{ DEBUG(";"); return ';'; }
+":"		{ DEBUG(":"); return ':'; }
+"."		{ DEBUG("."); return '.'; }
+"~"		{ DEBUG("~"); return '~'; }
 
 \'(\\.|[^'])\'		{ DEBUG("CHARACTER LITERAL"); return CHAR_LITERAL; }
 \"(\\.|[^\\"\n])*\"	{ DEBUG("STRING LITERAL"); return STRING_LITERAL; }
 
 [ \n\t\v\f]		{ DEBUG("WS"); }
 
-.			{ DEBUG("BAD"); /* Discard bad characters */ }
+.			{ DEBUG("********************* BAD ************************"); /* Discard bad characters */ }
 
 %%
 
