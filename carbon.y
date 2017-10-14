@@ -23,25 +23,39 @@
 
 %token RS_OP LS_OP
 %token EQ_OP NE_OP LE_OP GE_OP
-%token AND_OP OR_OP AND_NOT_OP
+%token AND_OP OR_OP
 %token MUL_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP ADD_ASSIGN_OP SUB_ASSIGN_OP
-%token AND_ASSIGN_OP OR_ASSIGN_OP XOR_ASSIGN_OP AND_NOT_ASSIGN_OP LS_ASSIGN_OP RS_ASSIGN_OP
-
+%token AND_ASSIGN_OP OR_ASSIGN_OP XOR_ASSIGN_OP LS_ASSIGN_OP RS_ASSIGN_OP
 %token INC_OP DEC_OP
+
+%token FUNC MINUS_GR_OP
 
 %error-verbose
 
 %%
 
 program
-	: statements program
-	| statements
+	: statement program
+	| statement
 	;
 
-statements
+statement
+	: single_statement
+	| compound_statement
+	| function_definition
+	;
+
+compound_statement
+	: '{' '}'
+	| '{' single_statement '}'
+	; 
+
+single_statement
 	: declare_or_define
 	| initialize
 	| expression
+	| assignment
+	| function_call
 	;
 
 declare_or_define
@@ -269,12 +283,23 @@ bitwise_operator
 	: '&'
 	| '|'
 	| '^'
-	| AND_NOT_OP
 	;
 
 /*
 ternary_operator
 	: operand '?' operand ':' operand
+	;
+*/
+
+assignment
+	: assignment_lhs assignment_operator expression		{ DEBUG("ASSIGN EXP"); }
+	| assignment_lhs assignment_operator operand		{ DEBUG("ASSIGN OPERAND"); }
+	| assignment_lhs assignment_operator function_call	{ DEBUG("ASSIGN FUNC"); }
+	;
+
+assignment_lhs
+	: IDENTIFIER
+	| IDENTIFIER ',' assignment_lhs
 	;
 
 assignment_operator
@@ -287,11 +312,23 @@ assignment_operator
 	| AND_ASSIGN_OP
 	| OR_ASSIGN_OP
 	| XOR_ASSIGN_OP
-	| AND_NOT_ASSIGN_OP
 	| LS_ASSIGN_OP
 	| RS_ASSIGN_OP
 	;
-*/
+
+function_call
+	: IDENTIFIER '(' function_parameters ')'		{ DEBUG("FUNCTION CALL"); }
+	;
+
+function_parameters
+	: operand
+	| operand ',' function_parameters
+	; 
+
+function_definition
+	: FUNC IDENTIFIER '(' ')' compound_statement
+	| FUNC IDENTIFIER '(' ')' MINUS_GR_OP '(' ')' compound_statement
+	;
 
 %%
 

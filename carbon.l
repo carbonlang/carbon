@@ -99,7 +99,6 @@ while		{ DEBUG("WHILE"); }
 {HEX_PREFIX}{HEX}*"."{HEX}+{P_EXP}	{ DEBUG("CLASS E FLOAT CONSTANT"); return FLOAT_CONST; }
 {HEX_PREFIX}{HEX}+"."{P_EXP}		{ DEBUG("CLASS F FLOAT CONSTANT"); return FLOAT_CONST; }
 
-"&^"		{ DEBUG("AND_NOT_OP"); return AND_NOT_OP; }
 "<<"		{ DEBUG("RS_OP"); return RS_OP; }
 ">>"		{ DEBUG("LS_OP"); return LS_OP; }
 "=="		{ DEBUG("EQ_OP"); return EQ_OP; }
@@ -118,10 +117,9 @@ while		{ DEBUG("WHILE"); }
 "&="		{ DEBUG("AND_ASSIGN_OP"); return AND_ASSIGN_OP; }
 "|="		{ DEBUG("OR_ASSIGN_OP"); return OR_ASSIGN_OP; }
 "^="		{ DEBUG("XOR_ASSIGN_OP"); return XOR_ASSIGN_OP; }
-"&^="		{ DEBUG("AND_NOT_ASSIGN_OP"); return AND_NOT_ASSIGN_OP; }
 ">>="		{ DEBUG("LS_ASSIGN_OP"); return LS_ASSIGN_OP; }
 "<<="		{ DEBUG("RS_ASSIGN_OP"); return RS_ASSIGN_OP; }
-"->"		{ DEBUG("MINUS_GR_OP"); }
+"->"		{ DEBUG("MINUS_GR_OP"); return MINUS_GR_OP; }
 
 "="		{ DEBUG("="); return '='; }
 "+"		{ DEBUG("+"); return '+'; }
