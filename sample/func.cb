@@ -1,0 +1,4 @@
+calc(1, 10)
+pow(2, z)
+b = write("this is a test", op)
+a, b = open("test.cb", "rw")

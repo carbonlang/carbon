@@ -1,31 +1,26 @@
 // Sample basic carbon program
 
-struct person {
-	int age
-	float32 weight
-	char ptr ptr gender
-}
+struct Person
+    int age
+    float32 weight
+    char ptr ptr gender
 
-enum colors {
-	RED = 1
-	GREEN = 10
-	BLUE
-}
+enum Colors
+    RED = 1
+    GREEN = 10
+    BLUE
 
-union _ {
-	int const_ptr y
-	float32 z
-} coord[100]
+union Point
+    int const_ptr y
+    float32 z
 
-// func main() -> int {
-	int students
-	int64 count
-	int64 arr[100]
-	static char c
-	static const bool b
-	struct person pra
-	for count = 0; count < 100; count++ {
-		// do something
-	}
-	return 0
-}
+def main() -> int
+    int students
+    int64 count
+    int64 arr[100]
+    static char c
+    static const bool b
+    struct person pra
+    for count = 0; count < 100; count++
+	// do something
+    return 0
