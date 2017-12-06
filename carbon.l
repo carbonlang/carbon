@@ -26,6 +26,7 @@ void comment(void);
 
 alloc		{ D("ALLOC"); return ALLOC; }
 asm		{ D("ASM"); return ASM; }
+assert		{ D("ASSERT"); return ASSERT; }
 atomic		{ D("ATOMIC"); return ATOMIC; }
 auto		{ D("AUTO"); return AUTO; }
 bool		{ D("BOOL"); return BOOL; }
@@ -39,6 +40,7 @@ def		{ D("DEF"); return DEF; }
 default		{ D("DEFAULT"); return DEFAULT; }
 defer		{ D("DEFER"); return DEFER; }
 do		{ D("DO"); return DO; }
+"else if"	{ D("ELSE IF"); return ELSE_IF; }
 else		{ D("ELSE"); return ELSE; }
 enum		{ D("ENUM"); return ENUM; }
 extern		{ D("EXTERN"); return EXTERN; }
@@ -58,6 +60,7 @@ int8		{ D("INT8"); return INT8; }
 int16		{ D("INT16"); return INT16; }
 int32		{ D("INT32"); return INT32; }
 int64		{ D("INT64"); return INT64; }
+len		{ D("LEN"); return LEN; }
 module		{ D("MODULE"); return MODULE; }
 new		{ D("NEW"); return NEW; }
 nil		{ D("NIL"); return NIL; }
@@ -69,7 +72,9 @@ register	{ D("REGISTER"); return REGISTER; }
 require		{ D("REQUIRE"); return REQUIRE; }
 restrict	{ D("RESTRICT"); return RESTRICT; }
 return		{ D("RETURN"); return RETURN; }
+size		{ D("SIZE"); return SIZE; }
 static		{ D("STATIC"); return STATIC; }
+static_assert	{ D("STATIC_ASSERT"); return STATIC_ASSERT; }
 string		{ D("STRING"); return STRING; }
 struct		{ D("STRUCT"); return STRUCT; }
 switch		{ D("SWITCH"); return SWITCH; }
@@ -81,6 +86,10 @@ uint16		{ D("UINT16"); return UINT16; }
 uint32		{ D("UINT32"); return UINT32; }
 uint64		{ D("UINT64"); return UINT64; }
 union		{ D("UNION"); return UNION; }
+use		{ D("USE"); return USE; }
+utf8		{ D("UTF8"); return UTF8; }
+utf16		{ D("UTF16"); return UTF16; }
+utf32		{ D("UTF32"); return UTF32; }
 volatile	{ D("VOLATILE"); return VOLATILE; }
 while		{ D("WHILE"); return WHILE; }
 
@@ -101,6 +110,8 @@ while		{ D("WHILE"); return WHILE; }
 {HEX_PREFIX}{HEX}*"."{HEX}+{P_EXP}	{ D("CLASS E FLOAT CONSTANT"); return FLOAT_CONST; }
 {HEX_PREFIX}{HEX}+"."{P_EXP}		{ D("CLASS F FLOAT CONSTANT"); return FLOAT_CONST; }
 
+"<<--"		{ D("HEREDOC_START"); return HEREDOC_START; }
+"-->>"		{ D("HEREDOC_END"); return HEREDOC_END; }
 ">>="		{ D("LS_ASSIGN_OP"); return LS_ASSIGN_OP; }
 "<<="		{ D("RS_ASSIGN_OP"); return RS_ASSIGN_OP; }
 ">>"		{ D("LS_OP"); return LS_OP; }
@@ -122,6 +133,9 @@ while		{ D("WHILE"); return WHILE; }
 "|="		{ D("OR_ASSIGN_OP"); return OR_ASSIGN_OP; }
 "^="		{ D("XOR_ASSIGN_OP"); return XOR_ASSIGN_OP; }
 "->"		{ D("MINUS_GR_OP"); return MINUS_GR_OP; }
+"#{"		{ D("HASH_CURLY_OP_BRACE"); return HASH_CURLY_OP_BRACE; }
+"%q"		{ D("PERCENT_S_Q"); return PERCENT_S_Q; }
+"%Q"		{ D("PERCENT_L_Q"); return PERCENT_L_Q; }
 
 "="		{ D("="); return '='; }
 "+"		{ D("+"); return '+'; }
@@ -137,6 +151,8 @@ while		{ D("WHILE"); return WHILE; }
 ">"		{ D(">"); return '>'; }
 "("		{ D("("); return '('; }
 ")"		{ D(")"); return ')'; }
+"{"		{ D("("); return '{'; }
+"}"		{ D(")"); return '}'; }
 "["		{ D("["); return '['; }
 "]"		{ D("]"); return ']'; }
 ","		{ D(","); return ','; }
@@ -181,3 +197,4 @@ void comment(void) {
 	yyerror("Unterminated comment");
 }
 
+/* TODO : Pending tokens to be considered &^ &^= (u)long ~ ? : */
